@@ -15,4 +15,10 @@ public class HumanPlayer extends Player {
         int col = scanner.nextInt();
         return new Move(row, col);
     }
+
+    public Move playGUI(int row, int col) {
+        return new Move(row, col);
+    }
+
+
 }

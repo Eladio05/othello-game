@@ -6,6 +6,7 @@ public class ComputerPlayer extends Player {
 
     @Override
     public Move play(Board board) {
+        System.out.println("IA PLAY");
         int bestScore = Integer.MIN_VALUE;
         Move bestMove = null;
 

@@ -25,7 +25,7 @@ public class Game {
         displayWinner();
     }
 
-    private void playTurn() {
+    public void playTurn() {
         System.out.println("It's " + getCurrentPlayer().getColor() + "'s turn.");
         if (!board.hasValidMoves(getCurrentPlayer().getColor())) {
             System.out.println(getCurrentPlayer().getColor() + " cannot make a move!");
@@ -41,11 +41,12 @@ public class Game {
         System.out.println(board);
     }
 
-    private void switchPlayer() {
+
+    public void switchPlayer() {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
     }
 
-    private Player getCurrentPlayer() {
+    Player getCurrentPlayer() {
         return players.get(currentPlayerIndex);
     }
 
@@ -87,5 +88,21 @@ public class Game {
         Player player2 = new ComputerPlayer(DiskColor.WHITE);
         Game game = new Game(player1, player2);
         game.start();
+    }
+
+    public boolean placeDisk(int row, int col, DiskColor diskColor) {
+        return board.placeDisk(row, col, diskColor);
+    }
+
+    public Board getBoard() {
+        return board;
+    }
+
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public int getCurrentPlayerIndex() {
+        return currentPlayerIndex;
     }
 }
