@@ -109,6 +109,24 @@ public class Board {
 
     }
 
+    public int evaluate(DiskColor color) {
+        int score = 0;
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                Disk disk = getCell(i, j).getDisk();
+                if (disk != null) {
+                    if (disk.getColor() == color) {
+                        score++;
+                    } else {
+                        score--;
+                    }
+                }
+            }
+        }
+        return score;
+    }
+
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -194,11 +212,20 @@ public class Board {
         board.placeDisk(row, col, color);
     }
 
+    public Board(Board other) {
+        cells = new Cell[SIZE][SIZE];
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                cells[i][j] = new Cell(other.cells[i][j]);
+            }
+        }
+    }
+
+
 
 
     public static void main(String[] args) {
         //(new Board()).testIsValidMove();
-        (new Board()).testPlaceDisk();
     }
 
     private static void testMove(Board board, int row, int col, DiskColor color) {

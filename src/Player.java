@@ -10,4 +10,6 @@ public abstract class Player {
     }
 
     public abstract Move play(Board board);
+
+
 }

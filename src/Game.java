@@ -83,7 +83,7 @@ public class Game {
     }
 
     public static void main(String[] args) {
-        Player player1 = new HumanPlayer(DiskColor.BLACK);
+        Player player1 = new ComputerPlayer(DiskColor.BLACK);
         Player player2 = new ComputerPlayer(DiskColor.WHITE);
         Game game = new Game(player1, player2);
         game.start();

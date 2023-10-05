@@ -17,6 +17,15 @@ public class Cell {
         return disk == null;
     }
 
+    public Cell(Cell other) {
+        if (other.disk != null) {
+            this.disk = new Disk(other.disk.getColor());
+        } else {
+            this.disk = null;
+        }
+    }
+
+
     @Override
     public String toString() {
         if (isEmpty()) {
