@@ -1,5 +1,5 @@
 public class ComputerPlayer extends Player {
-
+    final int DEPTH = 3;
     public ComputerPlayer(DiskColor color) {
         super(color);
     }
@@ -12,7 +12,7 @@ public class ComputerPlayer extends Player {
         for (Move move : board.getValidMoves(color)) {
             Board tempBoard = new Board(board);  // Clone the board to simulate moves
             tempBoard.placeDisk(move.getRow(), move.getCol(), color);
-            int score = minimax(tempBoard, 3, false); // Depth of 3 for example
+            int score = minimax(tempBoard, DEPTH, false); // Depth of 3 for example
             if (score > bestScore) {
                 bestScore = score;
                 bestMove = move;
