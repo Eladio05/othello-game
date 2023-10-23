@@ -14,7 +14,7 @@ public class OthelloGUI extends Application {
     private Button[][] buttons = new Button[Board.SIZE][Board.SIZE];
     private Label timerLabel = new Label();
     private Timeline timeline;
-    private int timeSeconds = 20; // Durée du timer
+    private int timeSeconds = 20; // Duration of the timer
 
     public static void main(String[] args) {
         launch(args);
@@ -53,9 +53,10 @@ public class OthelloGUI extends Application {
         if (game.placeDisk(row, col, DiskColor.BLACK)) {
             game.switchPlayer();
             updateUI();
-
-            // Jouer le tour de l'IA
+            
             if (game.getCurrentPlayer() instanceof ComputerPlayer) {
+                timeline.stop();  // Stop the timer during the computer's turn
+
                 Move move;
                 do {
                     move = game.getCurrentPlayer().play(game.getBoard());
@@ -64,9 +65,11 @@ public class OthelloGUI extends Application {
                 game.getBoard().placeDisk(move.getRow(), move.getCol(), game.getCurrentPlayer().getColor());
                 game.switchPlayer();
                 updateUI();
-            }
 
-            resetTimer();
+                resetTimer();  // Restart the timer for the human player
+            } else {
+                resetTimer();
+            }
         }
     }
 
@@ -101,21 +104,23 @@ public class OthelloGUI extends Application {
             if (timeSeconds <= 0) {
                 timeline.stop();
                 System.out.println("Time's up! Skipping " + game.getCurrentPlayer().getColor() + "'s turn.");
-                game.switchPlayer(); // Passer le tour du joueur humain
                 
-                // Jouer le tour de l'IA
-                if (game.getCurrentPlayer() instanceof ComputerPlayer) {
-                    Move move;
-                    do {
-                        move = game.getCurrentPlayer().play(game.getBoard());
-                    } while (!game.getBoard().isValidMove(move.getRow(), move.getCol(), game.getCurrentPlayer().getColor()));
-
-                    game.getBoard().placeDisk(move.getRow(), move.getCol(), game.getCurrentPlayer().getColor());
+                if (!(game.getCurrentPlayer() instanceof ComputerPlayer)) {  // Check if it's the human player's turn
                     game.switchPlayer();
-                    updateUI();
+                    
+                    if (game.getCurrentPlayer() instanceof ComputerPlayer) {
+                        Move move;
+                        do {
+                            move = game.getCurrentPlayer().play(game.getBoard());
+                        } while (!game.getBoard().isValidMove(move.getRow(), move.getCol(), game.getCurrentPlayer().getColor()));
+
+                        game.getBoard().placeDisk(move.getRow(), move.getCol(), game.getCurrentPlayer().getColor());
+                        game.switchPlayer();
+                        updateUI();
+                    }
+                    
+                    resetTimer();  // Restart the timer for the human player
                 }
-                
-                resetTimer(); // Réinitialiser le timer pour le tour suivant du joueur humain
             }
         }));
         timeline.playFromStart();
