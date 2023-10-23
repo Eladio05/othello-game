@@ -1,14 +1,20 @@
-import javafx.animation.PauseTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class OthelloGUI extends Application {
     private Game game;
     private Button[][] buttons = new Button[Board.SIZE][Board.SIZE];
+    private Label timerLabel = new Label();
+    private Timeline timeline;
+    private int timeSeconds = 20; // Durée du timer
 
     public static void main(String[] args) {
         launch(args);
@@ -32,10 +38,13 @@ public class OthelloGUI extends Application {
             }
         }
 
+        VBox root = new VBox();
+        root.getChildren().addAll(timerLabel, grid);
 
         updateUI();
+        startTimer();
 
-        primaryStage.setScene(new Scene(grid));
+        primaryStage.setScene(new Scene(root));
         primaryStage.setTitle("Othello");
         primaryStage.show();
     }
@@ -45,14 +54,8 @@ public class OthelloGUI extends Application {
             game.switchPlayer();
             updateUI();
 
-            if (!game.getBoard().hasValidMoves(game.getCurrentPlayer().getColor())) {
-                System.out.println(game.getCurrentPlayer().getColor() + " cannot make a move!");
-                return;
-            }
-
-            // Pause de 1 seconde (ou la durÃ©e que vous souhaitez) avant que l'IA ne joue
-            PauseTransition pause = new PauseTransition(Duration.seconds(1));
-            pause.setOnFinished(e -> {
+            // Jouer le tour de l'IA
+            if (game.getCurrentPlayer() instanceof ComputerPlayer) {
                 Move move;
                 do {
                     move = game.getCurrentPlayer().play(game.getBoard());
@@ -61,8 +64,9 @@ public class OthelloGUI extends Application {
                 game.getBoard().placeDisk(move.getRow(), move.getCol(), game.getCurrentPlayer().getColor());
                 game.switchPlayer();
                 updateUI();
-            });
-            pause.play();
+            }
+
+            resetTimer();
         }
     }
 
@@ -83,5 +87,43 @@ public class OthelloGUI extends Application {
                 }
             }
         }
+    }
+
+    private void startTimer() {
+        if (timeline != null) {
+            timeline.stop();
+        }
+        timeline = new Timeline();
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1), event -> {
+            timeSeconds--;
+            timerLabel.setText("Time left: " + timeSeconds + " seconds");
+            if (timeSeconds <= 0) {
+                timeline.stop();
+                System.out.println("Time's up! Skipping " + game.getCurrentPlayer().getColor() + "'s turn.");
+                game.switchPlayer(); // Passer le tour du joueur humain
+                
+                // Jouer le tour de l'IA
+                if (game.getCurrentPlayer() instanceof ComputerPlayer) {
+                    Move move;
+                    do {
+                        move = game.getCurrentPlayer().play(game.getBoard());
+                    } while (!game.getBoard().isValidMove(move.getRow(), move.getCol(), game.getCurrentPlayer().getColor()));
+
+                    game.getBoard().placeDisk(move.getRow(), move.getCol(), game.getCurrentPlayer().getColor());
+                    game.switchPlayer();
+                    updateUI();
+                }
+                
+                resetTimer(); // Réinitialiser le timer pour le tour suivant du joueur humain
+            }
+        }));
+        timeline.playFromStart();
+    }
+
+    private void resetTimer() {
+        timeSeconds = 20;
+        timerLabel.setText("Time left: " + timeSeconds + " seconds");
+        timeline.playFromStart();
     }
 }

@@ -1,16 +1,18 @@
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.*;
 
 public class Game {
     private Board board;
     private List<Player> players;
-
     private int currentPlayerIndex;
+
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
 
     public Game(Player... players) {
         this.board = new Board();
         this.players = Arrays.asList(players);
-        this.currentPlayerIndex = 0; // Le premier joueur commence par défaut
+        this.currentPlayerIndex = 0;
     }
 
     public void start() {
@@ -23,6 +25,7 @@ public class Game {
         }
 
         displayWinner();
+        shutdownExecutor();
     }
 
     public void playTurn() {
@@ -32,15 +35,25 @@ public class Game {
             return;
         }
 
-        Move move;
-        do {
-            move = getCurrentPlayer().play(board);
-        } while (!board.isValidMove(move.getRow(), move.getCol(), getCurrentPlayer().getColor()));
+        Future<Move> future = executor.submit(() -> getCurrentPlayer().play(board));
 
-        board.placeDisk(move.getRow(), move.getCol(), getCurrentPlayer().getColor());
-        System.out.println(board);
+        Move move = null;
+        try {
+            move = future.get(15, TimeUnit.SECONDS);
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        } catch (TimeoutException e) {
+            System.out.println("Time's up for " + getCurrentPlayer().getColor() + "!");
+            future.cancel(true);
+        }
+
+        if (move != null && board.isValidMove(move.getRow(), move.getCol(), getCurrentPlayer().getColor())) {
+            board.placeDisk(move.getRow(), move.getCol(), getCurrentPlayer().getColor());
+            System.out.println(board);
+        } else {
+            System.out.println(getCurrentPlayer().getColor() + " missed their turn!");
+        }
     }
-
 
     public void switchPlayer() {
         currentPlayerIndex = (currentPlayerIndex + 1) % players.size();
@@ -83,8 +96,12 @@ public class Game {
         }
     }
 
+    private void shutdownExecutor() {
+        executor.shutdown();
+    }
+
     public static void main(String[] args) {
-        Player player1 = new ComputerPlayer(DiskColor.BLACK);
+        Player player1 = new HumanPlayer(DiskColor.BLACK);
         Player player2 = new ComputerPlayer(DiskColor.WHITE);
         Game game = new Game(player1, player2);
         game.start();

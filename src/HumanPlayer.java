@@ -7,6 +7,7 @@ public class HumanPlayer extends Player {
         super(color);
         scanner = new Scanner(System.in);
     }
+    
 
     @Override
     public Move play(Board board) {

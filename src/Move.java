@@ -43,7 +43,7 @@ public class Move {
         result = 31 * result + col;
         return result;
     }
-
+    
     public static void main(String[] args) {
         // Test
         Move move1 = new Move(3, 4);
