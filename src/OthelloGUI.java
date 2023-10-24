@@ -1,8 +1,10 @@
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
@@ -11,13 +13,14 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.scene.control.Alert.AlertType;
 
 public class OthelloGUI extends Application {
     private Game game;
     private Button[][] buttons = new Button[Board.SIZE][Board.SIZE];
     private Label timerLabel = new Label();
     private Timeline timeline;
-    private int timeSeconds = 20; // Duration of the timer
+    private int timeSeconds = 1; // Duration of the timer
 
     Stage primaryStage;
     Text title = new Text("Othello");
@@ -64,13 +67,11 @@ public class OthelloGUI extends Application {
         Button restartButton = new Button("Recommencer");
         Button exitButton = new Button("Quitter");
 
-        VBox buttonBox = new VBox(10);  // Espace de 10 pixels entre les boutons
-        buttonBox.setAlignment(Pos.TOP_LEFT); // Aligner les boutons à droite
+        HBox buttonBox = new HBox(10);  // Espace de 10 pixels entre les boutons
+        buttonBox.setAlignment(Pos.CENTER_RIGHT); // Aligner les boutons à droite
 
-        HBox botSide = new HBox();
-        botSide.getChildren().add(grid);
-        botSide.getChildren().add(buttonBox);
-        root.getChildren().add(botSide);  // Ajoutez la HBox à la VBox principale après le GridPane
+        root.getChildren().add(buttonBox);  // Ajoutez la HBox à la VBox principale après le GridPane
+
         buttonBox.getChildren().addAll(restartButton, exitButton);
 
         restartButton.setOnAction(e -> restartGame());  // Nous allons définir cette méthode plus loin.
@@ -144,13 +145,7 @@ public class OthelloGUI extends Application {
                     game.switchPlayer();
 
                     if (game.getCurrentPlayer() instanceof ComputerPlayer) {
-                        Move move;
-                        do {
-                            move = game.getCurrentPlayer().play(game.getBoard());
-                        } while (!game.getBoard().isValidMove(move.getRow(), move.getCol(), game.getCurrentPlayer().getColor()));
-
-                        game.getBoard().placeDisk(move.getRow(), move.getCol(), game.getCurrentPlayer().getColor());
-                        game.switchPlayer();
+                        playComputerTurn();
                         updateUI();
                     }
 
@@ -161,10 +156,40 @@ public class OthelloGUI extends Application {
         timeline.playFromStart();
     }
 
+    private void playComputerTurn() {
+        System.out.println("Tour du bot");
+        if (game.isGameOver()) {
+            showGameOverPopup();
+            return;
+        }
+        do {
+            Move move = game.getCurrentPlayer().play(game.getBoard());
+            if (move != null) {
+
+                game.getBoard().placeDisk(move.getRow(), move.getCol(), game.getCurrentPlayer().getColor());
+                System.out.println("The bot has played again");
+                System.out.println(game.getBoard().getValidMoves(game.getCurrentPlayer().getColor()));
+            }
+            game.switchPlayer();
+
+        } while (game.getBoard().hasValidMoves(DiskColor.WHITE) && !game.getBoard().hasValidMoves(DiskColor.BLACK));
+    }
+
     private void resetTimer() {
-        timeSeconds = 20;
+        timeSeconds = 1;
         timerLabel.setText("Time left: " + timeSeconds + " seconds");
         timeline.playFromStart();
+    }
+
+    private void showGameOverPopup() {
+        Platform.runLater(() -> {
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Fin de la partie");
+            alert.setHeaderText(null);
+            alert.setContentText("La partie est terminée!");
+
+            alert.showAndWait();
+        });
     }
 
     private void restartGame() {

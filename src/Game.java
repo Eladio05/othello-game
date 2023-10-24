@@ -63,7 +63,7 @@ public class Game {
         return players.get(currentPlayerIndex);
     }
 
-    private boolean isGameOver() {
+    public boolean isGameOver() {
         return !board.hasValidMoves(DiskColor.BLACK) && !board.hasValidMoves(DiskColor.WHITE);
     }
 
