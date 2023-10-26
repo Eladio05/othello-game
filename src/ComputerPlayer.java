@@ -1,5 +1,6 @@
 public class ComputerPlayer extends Player {
     final int DEPTH = 3;
+    private String evaluationStrategy = "mobility";
     public ComputerPlayer(DiskColor color) {
         super(color);
     }
@@ -31,7 +32,7 @@ public class ComputerPlayer extends Player {
     
     private int minimax(Board board, int depth, boolean isMaximizingPlayer) {
         if (depth == 0 || !board.hasValidMoves(DiskColor.BLACK) && !board.hasValidMoves(DiskColor.WHITE)) {
-            return board.evaluate(color);
+            return board.evaluate(color, evaluationStrategy);
         }
 
         if (isMaximizingPlayer) {
@@ -60,7 +61,7 @@ public class ComputerPlayer extends Player {
         private int minimaxAlphaBeta(Board board, int depth, int alpha, int beta, boolean isMaximizingPlayer) {
             // Conditions d'arrêt : profondeur atteinte ou pas de coups possibles
             if (depth == 0 || !board.hasValidMoves(DiskColor.BLACK) && !board.hasValidMoves(DiskColor.WHITE)) {
-                return board.evaluate(color);
+                return board.evaluate(color, evaluationStrategy);
             }
 
             if (isMaximizingPlayer) {
@@ -94,7 +95,7 @@ public class ComputerPlayer extends Player {
 
         private int negamax(Board board, int depth, DiskColor currentColor) {
             if (depth == 0 || !board.hasValidMoves(DiskColor.BLACK) && !board.hasValidMoves(DiskColor.WHITE)) {
-                return board.evaluate(currentColor) * (currentColor == color ? 1 : -1);
+                return board.evaluate(currentColor,evaluationStrategy) * (currentColor == color ? 1 : -1);
             }
 
             int maxEval = Integer.MIN_VALUE;
@@ -112,7 +113,7 @@ public class ComputerPlayer extends Player {
         
         private int negamaxAlphaBeta(Board board, int depth, int alpha, int beta, DiskColor currentColor) {
             if (depth == 0 || !board.hasValidMoves(DiskColor.BLACK) && !board.hasValidMoves(DiskColor.WHITE)) {
-                return board.evaluate(currentColor) * (currentColor == color ? 1 : -1);
+                return board.evaluate(currentColor, evaluationStrategy) * (currentColor == color ? 1 : -1);
             }
 
             int maxEval = Integer.MIN_VALUE;

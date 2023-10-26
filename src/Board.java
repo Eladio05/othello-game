@@ -33,6 +33,19 @@ public class Board {
         System.out.println("Move impossible");
         return false;
     }
+    
+    public int countDisks(DiskColor color) {
+        int count = 0;
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                Cell cell = cells[i][j];
+                if (cell != null && !cell.isEmpty() && cell.getDisk().getColor() == color) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
 
     private void flipDisks(int row, int col, DiskColor color) {
         DiskColor opponentColor = (color == DiskColor.BLACK) ? DiskColor.WHITE : DiskColor.BLACK;
@@ -108,8 +121,40 @@ public class Board {
         return false;
 
     }
+    
+    private int evaluateMobility(DiskColor color) {
+        // Poids pour les coins et la mobilité
+        final int cornerWeight = 20;
+        final int mobilityWeight = 1;
 
-    public int evaluate(DiskColor color) {
+        // Calcul de la mobilité
+        int myMobility = getValidMoves(color).size();
+        DiskColor opponentColor = (color == DiskColor.BLACK) ? DiskColor.WHITE : DiskColor.BLACK;
+        int opponentMobility = getValidMoves(opponentColor).size();
+
+        // Calcul des coins
+        int myCorners = countCorners(color);
+        int opponentCorners = countCorners(opponentColor);
+
+        // Évaluation de la mobilité et des coins
+        return myMobility * mobilityWeight - opponentMobility * mobilityWeight 
+               + myCorners * cornerWeight - opponentCorners * cornerWeight;
+    }
+
+    private int countCorners(DiskColor color) {
+        int count = 0;
+        int[][] corners = {{0, 0}, {0, SIZE - 1}, {SIZE - 1, 0}, {SIZE - 1, SIZE - 1}};
+        for (int[] corner : corners) {
+            Cell cell = cells[corner[0]][corner[1]];
+            if (!cell.isEmpty() && cell.getDisk().getColor() == color) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+
+    public int evaluateDefault(DiskColor color) {
         int score = 0;
         for (int i = 0; i < SIZE; i++) {
             for (int j = 0; j < SIZE; j++) {
@@ -125,6 +170,33 @@ public class Board {
         }
         return score;
     }
+    
+    public int evaluate(DiskColor color, String strategy) {
+        switch (strategy) {
+        	case "positionnel":
+        		return evaluatePositionnel(color);        	
+            case "absolu":
+                return evaluateAbsolute(color);
+            case "mobility":
+                return evaluateMobility(color);
+            // autres cas...
+            default:
+                return evaluateDefault(color);
+        }
+    }
+    
+    private int evaluatePositionnel(DiskColor color) {
+    	return 0;
+    }
+
+
+    private int evaluateAbsolute(DiskColor color) {
+        int myDisks = countDisks(color);
+        DiskColor opponentColor = (color == DiskColor.BLACK) ? DiskColor.WHITE : DiskColor.BLACK;
+        int opponentDisks = countDisks(opponentColor);
+        return myDisks - opponentDisks;
+    }
+
 
 
     @Override

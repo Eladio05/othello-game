@@ -20,7 +20,7 @@ public class OthelloGUI extends Application {
     private Button[][] buttons = new Button[Board.SIZE][Board.SIZE];
     private Label timerLabel = new Label();
     private Timeline timeline;
-    private int timeSeconds = 1; // Duration of the timer
+    private int timeSeconds = 20; // Duration of the timer
 
     Stage primaryStage;
     Text title = new Text("Othello");
@@ -176,7 +176,7 @@ public class OthelloGUI extends Application {
     }
 
     private void resetTimer() {
-        timeSeconds = 1;
+        timeSeconds = 20;
         timerLabel.setText("Time left: " + timeSeconds + " seconds");
         timeline.playFromStart();
     }
@@ -186,16 +186,16 @@ public class OthelloGUI extends Application {
             Alert alert = new Alert(AlertType.INFORMATION);
             alert.setTitle("Fin de la partie");
             alert.setHeaderText(null);
-            alert.setContentText("La partie est terminÃ©e!");
+            alert.setContentText("La partie est terminée!");
 
             alert.showAndWait();
         });
     }
 
     private void restartGame() {
-        // Remettez votre jeu Ã  son Ã©tat initial ici
-        // Par exemple, si vous avez une mÃ©thode pour initialiser le jeu, appelez-la ici.
-        // Sinon, vous pouvez simplement fermer et rouvrir votre fenÃªtre pour redÃ©marrer le jeu.
+        // Remettez votre jeu à son état initial ici
+        // Par exemple, si vous avez une méthode pour initialiser le jeu, appelez-la ici.
+        // Sinon, vous pouvez simplement fermer et rouvrir votre fenêtre pour redémarrer le jeu.
         createGame();
         updateUI();
         resetTimer();
