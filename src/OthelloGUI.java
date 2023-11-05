@@ -1,4 +1,4 @@
-import javafx.animation.KeyFrame;
+/*import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -200,4 +200,4 @@ public class OthelloGUI extends Application {
         updateUI();
         resetTimer();
     }
-}
+}*/

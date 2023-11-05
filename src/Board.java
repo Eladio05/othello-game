@@ -30,7 +30,7 @@ public class Board {
             flipDisks(row, col, color);
             return true;
         }
-        System.out.println("Move impossible");
+        //System.out.println("Move impossible");
         return false;
     }
     

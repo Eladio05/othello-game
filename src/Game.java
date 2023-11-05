@@ -16,22 +16,23 @@ public class Game {
     }
 
     public void start() {
-        System.out.println("Starting game...\n");
-        System.out.println(board);
+        //System.out.println("Starting game...\n");
+        //System.out.println(board);
 
         while (!isGameOver()) {
             playTurn();
+            //System.out.println(board);
             switchPlayer();
         }
 
-        displayWinner();
+        //displayWinner();
         shutdownExecutor();
     }
 
     public void playTurn() {
-        System.out.println("It's " + getCurrentPlayer().getColor() + "'s turn.");
+        //System.out.println("It's " + getCurrentPlayer().getColor() + "'s turn.");
         if (!board.hasValidMoves(getCurrentPlayer().getColor())) {
-            System.out.println(getCurrentPlayer().getColor() + " cannot make a move!");
+            //System.out.println(getCurrentPlayer().getColor() + " cannot make a move!");
             return;
         }
 
@@ -43,15 +44,15 @@ public class Game {
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         } catch (TimeoutException e) {
-            System.out.println("Time's up for " + getCurrentPlayer().getColor() + "!");
+            //System.out.println("Time's up for " + getCurrentPlayer().getColor() + "!");
             future.cancel(true);
         }
 
         if (move != null && board.isValidMove(move.getRow(), move.getCol(), getCurrentPlayer().getColor())) {
             board.placeDisk(move.getRow(), move.getCol(), getCurrentPlayer().getColor());
-            System.out.println(board);
+            //System.out.println(board);
         } else {
-            System.out.println(getCurrentPlayer().getColor() + " missed their turn!");
+            //System.out.println(getCurrentPlayer().getColor() + " missed their turn!");
         }
     }
 
@@ -64,6 +65,7 @@ public class Game {
     }
 
     public boolean isGameOver() {
+        // a         System.out.println("La game est fini: " + (!board.hasValidMoves(DiskColor.BLACK) && !board.hasValidMoves(DiskColor.WHITE) ));
         return !board.hasValidMoves(DiskColor.BLACK) && !board.hasValidMoves(DiskColor.WHITE);
     }
 
