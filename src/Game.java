@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.*;
@@ -107,6 +108,33 @@ public class Game {
         Player player2 = new ComputerPlayer(DiskColor.WHITE);
         Game game = new Game(player1, player2);
         game.start();
+    }
+
+    public List<String> getResult(){
+        List<String> res = new ArrayList<String>();
+        String str1 = players.get(0).getClass().getName();
+        String str2 = players.get(1).getClass().getName();
+
+        int blackCount = 0;
+        int whiteCount = 0;
+        for (int i = 0; i < Board.SIZE; i++) {
+            for (int j = 0; j < Board.SIZE; j++) {
+                Disk disk = board.getCell(i, j).getDisk();
+                if (disk != null) {
+                    if (disk.getColor() == DiskColor.BLACK) {
+                        blackCount++;
+                    } else {
+                        whiteCount++;
+                    }
+                }
+            }
+        }
+
+        String winner = String.valueOf(whiteCount - blackCount);
+        res.add(str1);
+        res.add(str2);
+        res.add(winner);
+        return res;
     }
 
     public boolean placeDisk(int row, int col, DiskColor diskColor) {
