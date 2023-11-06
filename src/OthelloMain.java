@@ -5,9 +5,10 @@ import java.util.List;
 
 public class OthelloMain {
     private enum Strategy{
-        POSITIONNEL("positionnel"),
+        POSITIONNEL("positional"),
         ABSOLU("absolu"),
         MOBILITY("mobility"),
+        MIXTE("mixed")	,      
         DEFAULT("default");
         String strategie;
         Strategy(String strategie) {

@@ -1,6 +1,6 @@
 public class ComputerPlayer extends Player {
     final int DEPTH = 3;
-    private String evaluationStrategy = "mobility";
+    private String evaluationStrategy = "mixed";
     public ComputerPlayer(DiskColor color) {
         super(color);
     }

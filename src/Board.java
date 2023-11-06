@@ -19,6 +19,18 @@ public class Board {
         cells[SIZE / 2 - 1][SIZE / 2].setDisk(new Disk(DiskColor.BLACK));
         cells[SIZE / 2][SIZE / 2 - 1].setDisk(new Disk(DiskColor.BLACK));
     }
+    
+    private final static int[][] WEIGHTS = {
+    	    { 500, -150, 30, 10, 10, 30, -150, 500 },
+    	    { -150, -250, 0, 0, 0, 0, -250, -150 },
+    	    { 30, 0, 1, 2, 2, 1, 0, 30 },
+    	    { 10, 0, 2, 16, 16, 2, 0, 10 },
+    	    { 10, 0, 2, 16, 16, 2, 0, 10 },
+    	    { 30, 0, 1, 2, 2, 1, 0, 30 },
+    	    { -150, -250, 0, 0, 0, 0, -250, -150 },
+    	    { 500, -150, 30, 10, 10, 30, -150, 500 }
+    	};
+
 
     public Cell getCell(int row, int col) {
         return cells[row][col];
@@ -173,21 +185,58 @@ public class Board {
     
     public int evaluate(DiskColor color, String strategy) {
         switch (strategy) {
-        	case "positionnel":
-        		return evaluatePositionnel(color);        	
             case "absolu":
                 return evaluateAbsolute(color);
             case "mobility":
                 return evaluateMobility(color);
+            case "positional":
+                return evaluatePositional(color);
+            case "mixed":
+                return evaluateMixed(color);
             // autres cas...
             default:
                 return evaluateDefault(color);
         }
     }
-    
-    private int evaluatePositionnel(DiskColor color) {
-    	return 0;
+
+    private int evaluatePositional(DiskColor color) {
+        int myScore = 0;
+        int opponentScore = 0;
+        DiskColor opponentColor = (color == DiskColor.BLACK) ? DiskColor.WHITE : DiskColor.BLACK;
+
+        for (int i = 0; i < SIZE; i++) {
+            for (int j = 0; j < SIZE; j++) {
+                Cell cell = cells[i][j];
+                if (!cell.isEmpty()) {
+                    int weight = WEIGHTS[i][j];
+                    if (cell.getDisk().getColor() == color) {
+                        myScore += weight;
+                    } else if (cell.getDisk().getColor() == opponentColor) {
+                        opponentScore += weight;
+                    }
+                }
+            }
+        }
+
+        return myScore - opponentScore;
     }
+    
+    private int evaluateMixed(DiskColor color) {
+        int totalDisks = countDisks(DiskColor.BLACK) + countDisks(DiskColor.WHITE);
+        int totalMoves = SIZE * SIZE;
+        int earlyGameThreshold = 20; // Nombre de coups pour le début de partie
+        int lateGameThreshold = totalMoves - 16; // Nombre de coups pour la fin de partie
+
+        if (totalDisks <= earlyGameThreshold) {
+            return evaluatePositional(color);
+        } else if (totalDisks <= lateGameThreshold) {
+            return evaluateMobility(color);
+        } else {
+            return evaluateAbsolute(color);
+        }
+    }
+
+
 
 
     private int evaluateAbsolute(DiskColor color) {
