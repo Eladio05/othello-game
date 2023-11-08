@@ -1,6 +1,5 @@
 public class NegaMaxAlphaBetaPlayer extends Player{
     final int DEPTH = 3;
-    private String evaluationStrategy;
 
     public NegaMaxAlphaBetaPlayer(DiskColor color, String evaluationStrategy) {
         super(color);
@@ -19,7 +18,7 @@ public class NegaMaxAlphaBetaPlayer extends Player{
             //NEGAMAX
             int score = negamaxAlphaBeta(tempBoard, DEPTH,Integer.MIN_VALUE,Integer.MAX_VALUE, color);
 
-            if (score > bestScore) {
+            if (score >= bestScore) {
                 bestScore = score;
                 bestMove = move;
             }

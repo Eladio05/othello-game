@@ -1,6 +1,5 @@
 public class MinMaxPlayer extends Player{
     final int DEPTH = 3;
-    private String evaluationStrategy;
 
     public MinMaxPlayer(DiskColor color, String evaluationStrategy) {
         super(color);

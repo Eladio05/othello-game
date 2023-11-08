@@ -114,7 +114,7 @@ public class Game {
         List<String> res = new ArrayList<String>();
         String str1 = players.get(0).getClass().getName();
         String str2 = players.get(1).getClass().getName();
-
+        String strategie = players.get(0).evaluationStrategy;
         int blackCount = 0;
         int whiteCount = 0;
         for (int i = 0; i < Board.SIZE; i++) {
@@ -133,6 +133,7 @@ public class Game {
         String winner = String.valueOf(whiteCount - blackCount);
         res.add(str1);
         res.add(str2);
+        res.add(strategie);
         res.add(winner);
         return res;
     }

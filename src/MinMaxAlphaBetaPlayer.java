@@ -1,6 +1,5 @@
 public class MinMaxAlphaBetaPlayer extends Player{
     final int DEPTH = 3;
-    private String evaluationStrategy;
 
     public MinMaxAlphaBetaPlayer(DiskColor color, String evaluationStrategy) {
         super(color);
@@ -17,7 +16,7 @@ public class MinMaxAlphaBetaPlayer extends Player{
             tempBoard.placeDisk(move.getRow(), move.getCol(), color);
             int score = minimaxAlphaBeta(tempBoard, DEPTH,Integer.MIN_VALUE,Integer.MAX_VALUE, false); // Depth of 3 for example
 
-            if (score > bestScore) {
+            if (score >= bestScore) {
                 bestScore = score;
                 bestMove = move;
             }

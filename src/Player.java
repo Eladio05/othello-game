@@ -1,5 +1,6 @@
 public abstract class Player {
     protected DiskColor color;
+    public String evaluationStrategy;
 
     public Player(DiskColor color) {
         this.color = color;
