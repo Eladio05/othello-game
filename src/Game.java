@@ -148,6 +148,10 @@ public class Game {
         res.add(String.valueOf(players.get(1).getAveragePlayTime()));
         res.add(String.valueOf(players.get(0).nbNoeud));
         res.add(String.valueOf(players.get(1).nbNoeud));
+        res.add(String.valueOf(players.get(0).getAverageNbNoeud()));
+        res.add(String.valueOf(players.get(1).getAverageNbNoeud()));
+        res.add(String.valueOf(players.get(0).DEPTH));
+        res.add(String.valueOf(players.get(1).DEPTH));
         return res;
     }
 

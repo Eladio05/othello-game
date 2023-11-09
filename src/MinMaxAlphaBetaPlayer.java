@@ -1,5 +1,4 @@
 public class MinMaxAlphaBetaPlayer extends Player{
-    final int DEPTH = 3;
 
     public MinMaxAlphaBetaPlayer(DiskColor color, String evaluationStrategy) {
         super(color);
@@ -36,7 +35,6 @@ public class MinMaxAlphaBetaPlayer extends Player{
         if (depth == 0 || !board.hasValidMoves(DiskColor.BLACK) && !board.hasValidMoves(DiskColor.WHITE)) {
             return board.evaluate(color, evaluationStrategy);
         }
-
         if (isMaximizingPlayer) {
             int maxEval = Integer.MIN_VALUE;
             for (Move move : board.getValidMoves(color)) {

@@ -96,21 +96,24 @@ public class OthelloMain {
 
         List<List<String>> resultsToWrite = new ArrayList<>(); // Liste pour accumuler les résultats
         final int batchSize = 100; // Définissez une taille de lot pour l'écriture en CSV
-        for (Player p1 : players) {
-            for (Player p : players) {
-                System.out.println("IA: " + p.getClass().getName());
-                    // Démarrage du jeu
-                    Game game = new Game(p1, p);
-                    game.start();
-                    resultsToWrite.add(game.getResult());
-                    // Écrivez par lot pour réduire les opérations d'écriture sur le disque
-                    if (resultsToWrite.size() >= batchSize) {
-                        writeLinesToCsv("results_finals.csv", resultsToWrite);
-                        resultsToWrite.clear(); // Videz la liste après l'écriture
-                    }
+
+
+        for (Player p : players) {
+            System.out.println("IA: " + p.getClass().getName());
+            for (int i = 0; i < 500; i++) {
+                // Démarrage du jeu
+                Game game = new Game(IARandom, p);
+                game.start();
+                resultsToWrite.add(game.getResult());
+                // Écrivez par lot pour réduire les opérations d'écriture sur le disque
+                if (resultsToWrite.size() >= batchSize) {
+                    writeLinesToCsv("results_finals.csv", resultsToWrite);
+                    resultsToWrite.clear(); // Videz la liste après l'écriture
                 }
+            }
         }
-    /*
+
+
         for (Player p : players) {
             System.out.println("IA: " + p.getClass().getName());
             for (int i = 0; i < 500; i++) {
@@ -124,7 +127,7 @@ public class OthelloMain {
                     resultsToWrite.clear(); // Videz la liste après l'écriture
                 }
             }
-        }*/
+        }
 
         // Écrivez tout reste de données après la boucle
         if (!resultsToWrite.isEmpty()) {

@@ -1,5 +1,4 @@
 public class MinMaxPlayer extends Player{
-    final int DEPTH = 3;
 
     public MinMaxPlayer(DiskColor color, String evaluationStrategy) {
         super(color);
@@ -33,11 +32,9 @@ public class MinMaxPlayer extends Player{
 
     private int minimax(Board board, int depth, boolean isMaximizingPlayer) {
         nbNoeud++;
-
         if (depth == 0 || !board.hasValidMoves(DiskColor.BLACK) && !board.hasValidMoves(DiskColor.WHITE)) {
             return board.evaluate(color, evaluationStrategy);
         }
-
         if (isMaximizingPlayer) {
             int maxEval = Integer.MIN_VALUE;
             for (Move move : board.getValidMoves(color)) {

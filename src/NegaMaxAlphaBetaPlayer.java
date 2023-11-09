@@ -1,5 +1,4 @@
 public class NegaMaxAlphaBetaPlayer extends Player{
-    final int DEPTH = 3;
 
     public NegaMaxAlphaBetaPlayer(DiskColor color, String evaluationStrategy) {
         super(color);
@@ -36,10 +35,8 @@ public class NegaMaxAlphaBetaPlayer extends Player{
         if (depth == 0 || !board.hasValidMoves(DiskColor.BLACK) && !board.hasValidMoves(DiskColor.WHITE)) {
             return board.evaluate(currentColor, evaluationStrategy) * (currentColor == color ? 1 : -1);
         }
-
         int maxEval = Integer.MIN_VALUE;
         DiskColor opponentColor = (currentColor == DiskColor.BLACK) ? DiskColor.WHITE : DiskColor.BLACK;
-
         for (Move move : board.getValidMoves(currentColor)) {
             Board tempBoard = new Board(board);
             tempBoard.placeDisk(move.getRow(), move.getCol(), currentColor);
@@ -48,7 +45,6 @@ public class NegaMaxAlphaBetaPlayer extends Player{
             alpha = Math.max(alpha, eval);
             if (alpha >= beta) break;
         }
-
         return maxEval;
     }
 }
