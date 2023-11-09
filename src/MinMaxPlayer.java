@@ -8,6 +8,7 @@ public class MinMaxPlayer extends Player{
 
     @Override
     public Move play(Board board) {
+        long startTime = System.nanoTime(); // Début de mesure du temps
 
         int bestScore = Integer.MIN_VALUE;
         Move bestMove = null;
@@ -22,10 +23,17 @@ public class MinMaxPlayer extends Player{
                 bestMove = move;
             }
         }
+        long endTime = System.nanoTime(); // Fin de mesure du temps
+        totalTime += (endTime - startTime); // Accumulation du temps total
+        playCount++; // Incrémentation du nombre d'appels
         return bestMove;
     }
 
+
+
     private int minimax(Board board, int depth, boolean isMaximizingPlayer) {
+        nbNoeud++;
+
         if (depth == 0 || !board.hasValidMoves(DiskColor.BLACK) && !board.hasValidMoves(DiskColor.WHITE)) {
             return board.evaluate(color, evaluationStrategy);
         }

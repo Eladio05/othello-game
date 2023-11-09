@@ -13,6 +13,11 @@ public class Game {
     public Game(Player... players) {
         this.board = new Board();
         this.players = Arrays.asList(players);
+        this.players.get(0).color = DiskColor.WHITE;
+        this.players.get(1).color = DiskColor.BLACK;
+        this.players.get(0).nbNoeud = 0;
+        this.players.get(1).nbNoeud = 0;
+
         this.currentPlayerIndex = 0;
     }
 
@@ -110,11 +115,14 @@ public class Game {
         game.start();
     }
 
-    public List<String> getResult(){
+    public List<String> getResult() {
+
         List<String> res = new ArrayList<String>();
         String str1 = players.get(0).getClass().getName();
         String str2 = players.get(1).getClass().getName();
         String strategie = players.get(0).evaluationStrategy;
+        if(strategie == null) strategie = players.get(1).evaluationStrategy;
+
         int blackCount = 0;
         int whiteCount = 0;
         for (int i = 0; i < Board.SIZE; i++) {
@@ -135,8 +143,14 @@ public class Game {
         res.add(str2);
         res.add(strategie);
         res.add(winner);
+        // Ajout du temps moyen d'exécution de chaque joueur
+        res.add(String.valueOf(players.get(0).getAveragePlayTime()));
+        res.add(String.valueOf(players.get(1).getAveragePlayTime()));
+        res.add(String.valueOf(players.get(0).nbNoeud));
+        res.add(String.valueOf(players.get(1).nbNoeud));
         return res;
     }
+
 
     public boolean placeDisk(int row, int col, DiskColor diskColor) {
         return board.placeDisk(row, col, diskColor);

@@ -8,6 +8,7 @@ public class MinMaxAlphaBetaPlayer extends Player{
 
     @Override
     public Move play(Board board) {
+        long startTime = System.nanoTime(); // Début de mesure du temps
         int bestScore = Integer.MIN_VALUE;
         Move bestMove = null;
 
@@ -22,11 +23,15 @@ public class MinMaxAlphaBetaPlayer extends Player{
             }
         }
 
+        long endTime = System.nanoTime(); // Fin de mesure du temps
+        totalTime += (endTime - startTime); // Accumulation du temps total
+        playCount++; // Incrémentation du nombre d'appels
         return bestMove;
     }
 
     // Fonction MinMax avec �lagage alpha-b�ta
     private int minimaxAlphaBeta(Board board, int depth, int alpha, int beta, boolean isMaximizingPlayer) {
+        nbNoeud++;
         // Conditions d'arr�t : profondeur atteinte ou pas de coups possibles
         if (depth == 0 || !board.hasValidMoves(DiskColor.BLACK) && !board.hasValidMoves(DiskColor.WHITE)) {
             return board.evaluate(color, evaluationStrategy);
